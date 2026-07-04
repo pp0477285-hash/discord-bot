@@ -1,0 +1,89 @@
+import aiosqlite
+
+DB_NAME = "bot.db"
+
+
+async def init_db():
+    async with aiosqlite.connect(DB_NAME) as db:
+
+        # Einstellungen
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS settings(
+            guild_id INTEGER PRIMARY KEY,
+            prefix TEXT DEFAULT "!",
+            log_channel INTEGER,
+            ai_channel INTEGER,
+            welcome_channel INTEGER
+        )
+        """)
+
+        # Levelsystem
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS levels(
+            guild_id INTEGER,
+            user_id INTEGER,
+            xp INTEGER DEFAULT 0,
+            level INTEGER DEFAULT 1,
+            PRIMARY KEY(guild_id,user_id)
+        )
+        """)
+
+        # Economy
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS economy(
+            guild_id INTEGER,
+            user_id INTEGER,
+            wallet INTEGER DEFAULT 0,
+            bank INTEGER DEFAULT 0,
+            PRIMARY KEY(guild_id,user_id)
+        )
+        """)
+
+        # Giveaways
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS giveaways(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            guild_id INTEGER,
+            channel_id INTEGER,
+            message_id INTEGER,
+            prize TEXT,
+            winners INTEGER,
+            host INTEGER,
+            end_time INTEGER,
+            ended INTEGER DEFAULT 0
+        )
+        """)
+
+        # Giveaway-Teilnehmer
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS giveaway_entries(
+            giveaway_id INTEGER,
+            user_id INTEGER,
+            PRIMARY KEY(giveaway_id,user_id)
+        )
+        """)
+
+        # KI-Verlauf
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS ai_history(
+            guild_id INTEGER,
+            user_id INTEGER,
+            role TEXT,
+            content TEXT
+        )
+        """)
+
+        # Moderationslogs
+        await db.execute("""
+        CREATE TABLE IF NOT EXISTS modlogs(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            guild_id INTEGER,
+            moderator INTEGER,
+            target INTEGER,
+            action TEXT,
+            reason TEXT,
+            created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """)
+
+        await db.commit()
