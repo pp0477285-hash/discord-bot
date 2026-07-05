@@ -1,0 +1,6 @@
+discord.py>=2.4.0
+wavelink>=3.4.1
+aiosqlite
+python-dotenv
+flask
+PyNaCl
