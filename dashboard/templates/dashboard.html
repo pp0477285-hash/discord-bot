@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Dashboard</h1>
+      {% if user %}
+        <p>Angemeldet als {{ user.username }}</p>
+      {% else %}
+        <p>Noch nicht angemeldet.</p>
+      {% endif %}
+      <nav>
+        <a href="/settings">Einstellungen</a>
+        <a href="/api/giveaways">Giveaways</a>
+        <a href="/api/tickets">Tickets</a>
+      </nav>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
